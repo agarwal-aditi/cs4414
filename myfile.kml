@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <Style id="yellow">
+    <IconStyle id="yellow">
+      <Icon>
+        <href>files/yellow.png</href>
+        <scale>1.0</scale>
+      </Icon>
+    </IconStyle>
+  </Style>
+  <Placemark>
+    <name>22585000</name>
+    <description>Ocean and Plymouth</description>
+    <styleUrl>#yellow</styleUrl>
+    <Point>
+      <coordinates>-122.456505,37.723957</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>
