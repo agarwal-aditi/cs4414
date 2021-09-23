@@ -227,6 +227,9 @@ struct CompareTC{
             }
         }
     }
+    kml_file<<"</Document>"<<endl;
+    kml_file<<"</kml>"<<endl;
+    kml_file.close();
 
     ofstream output_file("myfile.csv");
     output_file << "CNN,STREET,COLOR" << endl;
