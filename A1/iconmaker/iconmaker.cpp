@@ -102,19 +102,6 @@ int main()
         }
     }
 
-    // pngwriter test(64,64,65535,"./files/test.png");
-    // test.filledsquare(0,29,64,35,0.0,1.0,0.0);
-    // test.filledsquare(29,0,35,64,0.0,1.0,0.0);
-    // test.close();
-
-    // pngwriter png(64,64,65535,"./files/test.png");
-   
-    // // 2 streets intersection
-    // // png.line(0,32,64,32,65535,0,0);
-    // png.filledsquare(0,29,64,35,65535,0,0);
-    // png.filledsquare(29,0,35,64,65535,0,0);
-    // png.close();
-   
     return 0;
 }
 
