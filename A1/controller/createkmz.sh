@@ -1,2 +1,3 @@
 #!/bin/bash
-zip myfile.kmz myfile.kml ./files/*
+zip -r myfile.zip files myfile.kml
+mv myfile.zip myfile.kmz
