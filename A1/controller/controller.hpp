@@ -87,3 +87,18 @@ public:
     vector<std::string>& split(char delim, int rep=0);
 };
 /////////////////////////////////////////////////////////
+
+class Street{
+public:
+    Street(std::string name, double dist=0.0){
+        street_name = name;
+        distance = dist;
+    }
+private:
+    std::string street_name;
+    std::string traffic;
+    double distance;
+    bool isDest;
+    pair<double,double> start;
+    pair<double,double> end;
+};

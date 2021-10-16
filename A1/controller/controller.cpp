@@ -1,8 +1,24 @@
 #include "controller.hpp"
+#include <cmath>
 #include <string>
 #include <iostream>
 #include <queue>
+#include <unordered_map>
+#include <utility>
 
+
+double compute_distance(const std::pair<double, double>& point1, std::pair<double, double>& point2)
+{
+ const std::pair<double, double> DEGREE_TO_MILES(54.74, 68.97);
+ const double long_miles = (point2.first - point1.first) * DEGREE_TO_MILES.first;
+ const double lat_miles = (point2.second - point1.second) * DEGREE_TO_MILES.second;
+ return std::sqrt(long_miles * long_miles + lat_miles * lat_miles);
+}
+
+
+double compute_time(const double distance, const uint32_t speed) {
+ return std::ceil((distance * 3600) / speed);
+}
 
 std::string TrafficLight::getColor() {
     return color;
@@ -161,28 +177,117 @@ struct CompareTC{
         return 1;
     }
     int t = std::stoi(flag.substr(3));
-    cout << t <<endl;
+    
 
     // read the CNN, TBC, STREET1/2/3/4 and shape values from csv    
     ifstream in("Traffic_Signals_SF.csv");
     std::string line;
     vector<string> row;
+    std::vector<std::vector<string>> traffic_signals_arr;
+    unordered_map<std::string,TrafficController> tcMap;
     int intersection_count = 0;
     bool start = false;
     std::vector<TrafficController> tcVec;
     while(getline(in,line)){
+        splitstring split_row(line);
+        row = split_row.split(',',1);
+        traffic_signals_arr.push_back(row);
         if(start && !line.empty()){
             intersection_count++;
-            splitstring split_row(line);
-            row = split_row.split(',',1);
             std::string TBC = row[12];
             if(!TBC.compare("GPS")){
                 TrafficController tc(-1,row[0],row[34],row[3],row[4],row[6],row[8]);
                 tcVec.push_back(tc);
+                std::pair<std::string,TrafficController> tc_pair (row[0],tc);
+                tcMap.insert(tc_pair);
             }
         }else start = true; //skip the header
     }
+    cout << traffic_signals_arr[0].size() << endl;
     in.close();
+
+
+    
+    ifstream in2("Sync_and_Cars.csv");
+    std::vector<std::vector<string>> cars_arr;
+    int idx;
+    int counter;
+    std::string line2;
+    vector<std::string> row2;
+    while(getline(in2,line2)){
+        splitstring split_row2(line2);
+        row2 = split_row2.split(',',1);
+        cars_arr.push_back(row2);
+        // if(!line2.empty()){
+        //     if(idx = line2.find('\r')){
+        //         line2 = line2.substr(0,idx);
+        //     }
+        // counter++;
+        // }
+    }
+    
+    // cout << counter << endl;
+    cout << cars_arr[0].size() << endl;
+    in2.close();
+
+    //create streets from the array
+    int i, j;
+    std::unordered_map<uint64_t,Street> streets;
+    uint32_t first_CNN;
+    uint32_t second_CNN;
+    uint64_t name;
+    std::string st_name;
+    double distance;
+    std::string coord_as_string1;
+    std::string coord_as_string2;
+    double first1;
+    double second1;
+    double first2;
+    double second2;
+    std::pair<double,double> pair1, pair2;
+    // for(i = 2; i<cars_arr.size()-1;i++){
+    //     for(j=0; j<cars_arr[0].size();j++){
+    //         if(!cars_arr[i][j].empty()){
+    //             cout << cars_arr[i][j] << endl;
+    //             first_CNN = std::stoi(cars_arr[i][j]);
+    //             if(!cars_arr[i+1][j].empty()){
+    //                 second_CNN = std::stoi(cars_arr[i+1][j]);
+    //                 name = first_CNN;
+    //                 name = name << 32;
+    //                 name = name || second_CNN;
+    //                 if(second_CNN == 0) st_name = "DESTINATION";
+    //                 else{
+    //                     st_name = std::to_string(name);
+    //                     // auto tc_find = tcMap.find(cars_arr[i][j]);
+    //                     // if(tc_find != tcMap.end())
+    //                     //     coord_as_string1 = (tc_find->second).getCoordinate();
+
+    //                     // first1 = double(std::stoi(coord_as_string1.substr(0,coord_as_string1.find(','))));
+    //                     // second1 = double(std::stoi(coord_as_string1.substr(coord_as_string1.find(',')+1)));
+    //                     // std::pair<double,double> pair1 (first1,second1);
+    //                     // auto tc_find2 = tcMap.find(cars_arr[i][j]);
+    //                     // if(tc_find2 != tcMap.end())
+    //                     //     coord_as_string1 = (tc_find2->second).getCoordinate();
+
+
+    //                     // first2 = double(std::stoi(coord_as_string2.substr(0,coord_as_string2.find(','))));
+    //                     // second2 = double(std::stoi(coord_as_string2.substr(coord_as_string2.find(',')+1)));
+    //                     // std::pair<double,double> pair2 (first2,second2);
+
+    //                     // distance = compute_distance(pair1,pair2);
+
+    //                 }
+    //                 // Street st(st_name);
+    //                 // std::pair<uint64_t,Street> street_pair (name,st);
+    //                 // streets.insert(street_pair);
+    //             }
+            
+    //         } 
+                
+    //     }
+
+    // }
+
     /////////////////////////////////////////////////////////////////
     //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
     priority_queue<TrafficController,vector<TrafficController>, CompareTC> pq;
