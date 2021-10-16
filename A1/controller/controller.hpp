@@ -33,6 +33,7 @@ int TrafficLight::counter = 0;
 class TrafficController{
 public:
     std::vector<TrafficLight> street_lights;
+    std::vector<std::string> street_names;
     int getCurrTime();
     void setCurrTime(int time_in);
     void setPrevTime(int time_in);
@@ -47,15 +48,19 @@ public:
         CNN = cnn_in;
         TrafficLight first(st1);
         street_lights.push_back(first);
+        street_names.push_back(st1);
+        street_names.push_back(st2);
         TrafficLight second(st2);
         street_lights.push_back(second);
         if(!st3.empty()){
             TrafficLight third(st3);
             street_lights.push_back(third);
+            street_names.push_back(st3);
         }
         if(!st4.empty()){
             TrafficLight fourth(st4);
             street_lights.push_back(fourth);
+            street_names.push_back(st4);
         }
         curr_time = time_in;
         prev_time = curr_time;
@@ -90,15 +95,52 @@ public:
 
 class Street{
 public:
-    Street(std::string name, double dist=0.0){
+    double compute_time(const double distance, const uint32_t speed);
+    void increase_car_count();
+    void decrement_car_count();
+    bool hasSpace();
+    Street(std::string name, bool light_traffic, bool street_unknown, TrafficController tc1, TrafficController tc2, double dist=0.0){
         street_name = name;
         distance = dist;
-    }
+        unknown_street = street_unknown;
+        if(!name.compare("DESTINATION")){
+            isDest = true;
+            drive_time = 0.0;
+        } 
+        else{
+            isDest = false;
+            uint32_t speed = light_traffic ? 30 : 3;
+            capacity = light_traffic ? 20 : 2;
+            drive_time = std::ceil((dist * 3600) / speed);
+        }
+        tc_begin = tc1;
+        tc_end = tc2;
+    };
 private:
     std::string street_name;
-    std::string traffic;
     double distance;
     bool isDest;
-    pair<double,double> start;
-    pair<double,double> end;
+    double drive_time;
+    int capacity;
+    int car_count = 0;
+    bool unknown_street;
+    TrafficController tc_begin;
+    TrafficController tc_end;
 };
+
+class Car{
+public:
+    void update_car(Street next_st);
+    Car(Street curr_street, Street n_street){
+        current_street = curr_street;
+        next_street = n_street;
+        curr_intersection = curr_street.tc_end;
+        next_intersection = n_street.tc_end;
+    }
+private:
+    Street current_street;
+    Street next_street;
+    TrafficController curr_intersection;
+    TrafficController next_intersection;
+    double accum_time = 0;
+}

@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include <cstdio>
 #include <cmath>
 #include <string>
 #include <iostream>
@@ -9,16 +10,12 @@
 
 double compute_distance(const std::pair<double, double>& point1, std::pair<double, double>& point2)
 {
- const std::pair<double, double> DEGREE_TO_MILES(54.74, 68.97);
- const double long_miles = (point2.first - point1.first) * DEGREE_TO_MILES.first;
- const double lat_miles = (point2.second - point1.second) * DEGREE_TO_MILES.second;
- return std::sqrt(long_miles * long_miles + lat_miles * lat_miles);
+    const std::pair<double, double> DEGREE_TO_MILES(54.74, 68.97);
+    const double long_miles = (point2.first - point1.first) * DEGREE_TO_MILES.first;
+    const double lat_miles = (point2.second - point1.second) * DEGREE_TO_MILES.second;
+    return std::sqrt(long_miles * long_miles + lat_miles * lat_miles);
 }
 
-
-double compute_time(const double distance, const uint32_t speed) {
- return std::ceil((distance * 3600) / speed);
-}
 
 std::string TrafficLight::getColor() {
     return color;
@@ -80,15 +77,34 @@ void TrafficController::updateLights(){
             }
             prev_time = curr_time;
     }
-    
-
 }
+
 
 bool TrafficController::allRed(){
     for(int i = 0; i<street_lights.size();i++){
         if((street_lights[i].getColor()).compare("r")) return false;
     }
     return true;
+}
+
+
+double Street::compute_time(const double distance, const uint32_t speed) {
+    return std::ceil((distance * 3600) / speed);
+}
+
+
+void Street::increase_car_count() {
+    car_count++;
+}
+
+
+void Street::decrement_car_count() {
+    car_count--;
+}
+
+
+bool Street::hasSpace() {
+    return (capacity-car_count > 0);
 }
 
 
@@ -157,7 +173,7 @@ std::string csvColor(std::string color_first_letter){
     else return "";
 }
 int main(int argc, char* argv[]){
-
+    std::cout.precision(20);
     ///////////////////////////////////////////////////////////////
 //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
 struct CompareTC{
@@ -218,7 +234,7 @@ struct CompareTC{
         row2 = split_row2.split(',',1);
         cars_arr.push_back(row2);
     }
-    
+    // cout << cars_arr[3][12].size() << endl;
     
     in2.close();
 
@@ -236,55 +252,93 @@ struct CompareTC{
     double second1;
     double first2;
     double second2;
+    int end_of_line = cars_arr[0].size();
+    bool ignore = false;
     std::pair<double,double> pair1, pair2;
+    std::vector<std::string> st_names1;
+    std::vector<std::string> st_names2;
+    std::string street_name;
+    bool street_name_unknown = false;
+    bool found_street = false;
+    
     for(i = 2; i<cars_arr.size()-1;i++){
-        for(j=0; j<cars_arr[0].size();j++){
-            if(!cars_arr[i][j].empty()){
+        for(j=0; j<end_of_line;j++){
+            if(!cars_arr[i][j].empty() && cars_arr[i][j].compare("\n") && cars_arr[i][j].size() > 0){
                 
                 first_CNN = std::stoi(cars_arr[i][j]);
                 
-                if(!cars_arr[i+1][j].empty()){
+                if(!cars_arr[i+1][j].empty() && cars_arr[i+1][j].compare("\n") && cars_arr[i+1][j].size() > 0){
                 
                     second_CNN = std::stoi(cars_arr[i+1][j]);
                 
                     name = first_CNN;
                     name = name << 32;
-                    name = name || second_CNN;
-                    if(second_CNN == 0) st_name = "DESTINATION";
-                    else{
-                        st_name = std::to_string(name);
-                        auto tc_find = tcMap.find(cars_arr[i][j]);
-                        if(tc_find != tcMap.end()){
-                            coord_as_string1 = (tc_find->second).getCoordinate();
-                            cout << " found" <<endl;
-                        } else cout << "not found" <<endl;
-                        cout << coord_as_string1 << endl;
-                        coord_as_string1 = coord_as_string1.substr(0,coord_as_string1.find(','));
-                        cout << coord_as_string1 << endl;
-                        first1 = double(std::stoi(coord_as_string1));
-                        second1 = double(std::stoi(coord_as_string1.substr(coord_as_string1.find(',')+1)));
-                        std::pair<double,double> pair1 (first1,second1);
-                        auto tc_find2 = tcMap.find(cars_arr[i][j]);
-                        if(tc_find2 != tcMap.end())
-                            coord_as_string2 = (tc_find2->second).getCoordinate();
+                    name = name | second_CNN;
 
-
-                        first2 = double(std::stoi(coord_as_string2.substr(0,coord_as_string2.find(','))));
-                        second2 = double(std::stoi(coord_as_string2.substr(coord_as_string2.find(',')+1)));
-                        std::pair<double,double> pair2 (first2,second2);
-
-                        distance = compute_distance(pair1,pair2);
-
+                    if(second_CNN == 0) {
+                        street_name = "DESTINATION";
+                        distance = 0;
+                        if(j == 14) end_of_line--;
                     }
-                    Street st(st_name);
-                    std::pair<uint64_t,Street> street_pair (name,st);
-                    streets.insert(street_pair);
-                }
-            
-            } 
-                
-        }
+                    else{
+                        if(cars_arr[i+1][j].size() > 1){
+                            st_name = std::to_string(name);
+                            auto tc_find = tcMap.find(cars_arr[i][j]);
+                            if(tc_find != tcMap.end()){
+                                coord_as_string1 = (tc_find->second).getCoordinate();
+                                st_names1 = (tc_find->second).street_names;
+                            }else ignore = true;
 
+                            auto tc_find2 = tcMap.find(cars_arr[i+1][j]);
+                            if(tc_find2 != tcMap.end()){
+                                coord_as_string2 = (tc_find2->second).getCoordinate();
+                                st_names2 = (tc_find->second).street_names;
+                            }else ignore = true;
+
+                            if(!ignore){
+                                std::string coord_as_string1_1 = coord_as_string1.substr(0,coord_as_string1.find(','));
+                                first1 = std::stod(coord_as_string1_1);
+                                
+                                std::string coord_as_string1_2 = coord_as_string1.substr(coord_as_string1.find(',')+1);
+                                second1 = std::stod(coord_as_string1_2);
+                                std::pair<double,double> pair1 (first1,second1);
+
+                                std::string coord_as_string2_1 = coord_as_string2.substr(0,coord_as_string2.find(','));
+                                first2 = std::stod(coord_as_string2_1);
+                                
+                                std::string coord_as_string2_2 = coord_as_string2.substr(coord_as_string2.find(',')+1);
+                                second2 = std::stod(coord_as_string2_2);
+
+                                std::pair<double,double> pair2 (first2,second2);
+                                
+                                distance = compute_distance(pair1,pair2);
+                                cout << compute_distance(pair1,pair2) << endl;
+
+
+                                for(auto i : st_names1){
+                                    if(std::find(st_names2.begin(),st_names2.end(),i) != st_names2.end()){
+                                        street_name = i + " FROM " + std::to_string(first_CNN) + "to " + std::to_string(second_CNN);
+                                        found_street = true;
+                                    }
+                                }
+                                if(!found_street){
+                                    street_name = "UNKNOWN FROM " + std::to_string(first_CNN) + "to " + std::to_string(second_CNN);
+                                    street_name_unknown = true;
+                                }
+                            }
+                        } else ignore = true;
+                    }
+                    if(!ignore){
+                        auto it = streets.find(name);
+                        if(it == streets.end()){
+                            Street st(street_name,true,street_name_known, tc_find, tc_find2, distance);
+                            std::pair<uint64_t,Street> street_pair (name,st);
+                            streets.insert(street_pair);
+                        }
+                    } else ignore = false;
+                }
+            } 
+        }
     }
 
     /////////////////////////////////////////////////////////////////
@@ -293,7 +347,7 @@ struct CompareTC{
     for(auto i = tcVec.cbegin(); i!=tcVec.cend();i++){
         pq.push(*i);
     }
-    // /////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     tcVec.clear();
     for(int i = 0; i<=t; i+=10){
         tcVec.clear();
