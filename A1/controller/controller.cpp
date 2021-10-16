@@ -106,7 +106,21 @@ void Street::decrement_car_count() {
 bool Street::hasSpace() {
     return (capacity-car_count > 0);
 }
+double Street::getDriveTime() {
+    return drive_time;
+}
+void Car::update_car(Street * next_st){
+    if(next_st->hasSpace()){
+        current_street->decrement_car_count();
+        accum_time += current_street->getDriveTime();
+        current_street = next_st;
 
+    }
+}
+
+int Car::getCurrTime(){
+    return curr_time;
+}
 
 /////////////////////////////////////////////////////////
 // portion taken from: https://www.cplusplus.com/articles/1UqpX9L8/
@@ -178,6 +192,12 @@ int main(int argc, char* argv[]){
 //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
 struct CompareTC{
     bool operator()( TrafficController& lhs,  TrafficController& rhs){
+        return lhs.getCurrTime() < rhs.getCurrTime();
+    }
+};
+
+struct CompareCar{
+    bool operator()( Car& lhs,  Car& rhs){
         return lhs.getCurrTime() < rhs.getCurrTime();
     }
 };
@@ -260,7 +280,9 @@ struct CompareTC{
     std::string street_name;
     bool street_name_unknown = false;
     bool found_street = false;
-    
+    std::vector<std::vector<*Street>> car_paths;
+    std::unordered_map<std::string, TrafficController>::iterator tc_find;
+    std::unordered_map<std::string, TrafficController>::iterator tc_find2;
     for(i = 2; i<cars_arr.size()-1;i++){
         for(j=0; j<end_of_line;j++){
             if(!cars_arr[i][j].empty() && cars_arr[i][j].compare("\n") && cars_arr[i][j].size() > 0){
@@ -278,18 +300,18 @@ struct CompareTC{
                     if(second_CNN == 0) {
                         street_name = "DESTINATION";
                         distance = 0;
-                        if(j == 14) end_of_line--;
+                        // if(j == 14) end_of_line--;
                     }
                     else{
                         if(cars_arr[i+1][j].size() > 1){
                             st_name = std::to_string(name);
-                            auto tc_find = tcMap.find(cars_arr[i][j]);
+                            tc_find = tcMap.find(cars_arr[i][j]);
                             if(tc_find != tcMap.end()){
                                 coord_as_string1 = (tc_find->second).getCoordinate();
                                 st_names1 = (tc_find->second).street_names;
                             }else ignore = true;
 
-                            auto tc_find2 = tcMap.find(cars_arr[i+1][j]);
+                            tc_find2 = tcMap.find(cars_arr[i+1][j]);
                             if(tc_find2 != tcMap.end()){
                                 coord_as_string2 = (tc_find2->second).getCoordinate();
                                 st_names2 = (tc_find->second).street_names;
@@ -331,21 +353,35 @@ struct CompareTC{
                     if(!ignore){
                         auto it = streets.find(name);
                         if(it == streets.end()){
-                            Street st(street_name,true,street_name_known, tc_find, tc_find2, distance);
+                            Street st(street_name,true,street_name_unknown, &(tc_find->second), &(tc_find->second), distance);
                             std::pair<uint64_t,Street> street_pair (name,st);
                             streets.insert(street_pair);
+                            car_paths[j].push_back(&st);
                         }
                     } else ignore = false;
                 }
             } 
         }
     }
+    std::vector<Car> carVec;
+    for(auto i: car_paths){
+        for(int j = -1; j<=t; j++){
+            Car c(&i,j);
+            carVec.push_back(c);
+        }
+    }       
+
 
     /////////////////////////////////////////////////////////////////
     //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
     priority_queue<TrafficController,vector<TrafficController>, CompareTC> pq;
     for(auto i = tcVec.cbegin(); i!=tcVec.cend();i++){
         pq.push(*i);
+    }
+
+    priority_queue<Car,vector<Car>, CompareCar> pq_car;
+    for(auto i = carVec.cbegin(); i!=carVec.cend();i++){
+        pq_car.push(*i);
     }
     ////////////////////////////////////////////////////////////////////
     tcVec.clear();
@@ -362,6 +398,8 @@ struct CompareTC{
             pq.push(*i);
         }
     }
+
+    
     ofstream kml_file("myfile.kml");
 
     kml_file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;

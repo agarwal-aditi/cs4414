@@ -99,7 +99,9 @@ public:
     void increase_car_count();
     void decrement_car_count();
     bool hasSpace();
-    Street(std::string name, bool light_traffic, bool street_unknown, TrafficController tc1, TrafficController tc2, double dist=0.0){
+    int getCurrTime();
+    double getDriveTime();
+    Street(std::string name, bool light_traffic, bool street_unknown, TrafficController * tc1, TrafficController * tc2, double dist=0.0){
         street_name = name;
         distance = dist;
         unknown_street = street_unknown;
@@ -124,23 +126,29 @@ private:
     int capacity;
     int car_count = 0;
     bool unknown_street;
-    TrafficController tc_begin;
-    TrafficController tc_end;
+    TrafficController * tc_begin;
+    TrafficController * tc_end;
 };
 
 class Car{
 public:
-    void update_car(Street next_st);
-    Car(Street curr_street, Street n_street){
-        current_street = curr_street;
+    std::vector<Street> path;
+    void update_car(Street * next_st);
+    int getCurrTime();
+    Car(std::vector<Street>* street_path, int time_in){
+        curr_time = time_in;
+        street_path[0] = curr_street;
+        curr_street.increment_car_count();
         next_street = n_street;
-        curr_intersection = curr_street.tc_end;
-        next_intersection = n_street.tc_end;
+        curr_intersection = curr_street->tc_end;
+        next_intersection = n_street->tc_end;
+        path = street_path;
     }
 private:
     Street current_street;
     Street next_street;
     TrafficController curr_intersection;
     TrafficController next_intersection;
+    int curr_time; 
     double accum_time = 0;
-}
+};
