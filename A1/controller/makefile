@@ -1,2 +1,2 @@
 default:
-	g++ -o controller -Wall -Wextra -g -DNO_FREETYPE controller.cpp -lpng -lz
+	g++ -o hw2 -Wall -Wextra controller.cpp 

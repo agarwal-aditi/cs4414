@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
+#include <queue>
 #include "rapidcsv.h"
+#include <memory>
 using namespace std;
 
 class TrafficLight{
@@ -17,6 +19,8 @@ public:
     void nextColor();
     std::string getStreet();
     bool isUpdated();
+    bool canGo();
+    TrafficLight() = default;
     TrafficLight(std::string street_in){
         int mod = counter%25;
         if(mod == 0) length = 90;
@@ -41,7 +45,12 @@ public:
     std::string getCoordinate();
     void updateLights();
     bool allRed();
-
+    TrafficController(){
+        CNN = "";
+        coordinate = "";
+        prev_green = -1;
+        curr_time = -1;
+    }
     TrafficController(int time_in, std::string cnn_in, std::string point,
                         std::string st1,std::string st2,
                         std::string st3 = "",std::string st4 = ""){
@@ -68,6 +77,7 @@ public:
         coordinate = point.substr(point.find('(')+1,point.find(')')-point.find('(')-1);
         std::replace(coordinate.begin(),coordinate.end(),' ',',');
     };
+    
     ///////////////////////////////////////////////////////////
     //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
     friend bool operator< (const TrafficController& lhs, const TrafficController& rhs);
@@ -101,7 +111,15 @@ public:
     bool hasSpace();
     int getCurrTime();
     double getDriveTime();
-    Street(std::string name, bool light_traffic, bool street_unknown, TrafficController * tc1, TrafficController * tc2, double dist=0.0){
+    std::string getStreetName();
+    bool isDestination();
+    void HeavyTraffic();
+    bool canSync();
+    void synchronize();
+    std::shared_ptr<TrafficController> tc_begin;
+    std::shared_ptr<TrafficController> tc_end;
+
+    Street(std::string name, bool light_traffic, bool street_unknown, std::shared_ptr<TrafficController> tc1, std::shared_ptr<TrafficController> tc2, bool syncable=false, double dist=0.0){
         street_name = name;
         distance = dist;
         unknown_street = street_unknown;
@@ -117,7 +135,10 @@ public:
         }
         tc_begin = tc1;
         tc_end = tc2;
+        can_sync = syncable && (!isDest);
     };
+    Street() = default;
+
 private:
     std::string street_name;
     double distance;
@@ -126,29 +147,36 @@ private:
     int capacity;
     int car_count = 0;
     bool unknown_street;
-    TrafficController * tc_begin;
-    TrafficController * tc_end;
+    bool can_sync;
+
+
 };
 
 class Car{
 public:
-    std::vector<Street> path;
-    void update_car(Street * next_st);
-    int getCurrTime();
-    Car(std::vector<Street>* street_path, int time_in){
-        curr_time = time_in;
-        street_path[0] = curr_street;
-        curr_street.increment_car_count();
-        next_street = n_street;
-        curr_intersection = curr_street->tc_end;
-        next_intersection = n_street->tc_end;
-        path = street_path;
+    
+    void update_car();
+    int getInitTime();
+    bool reachedDest() const;
+    int getTotalTime() const;
+    void HeavyTraffic();
+    std::queue<Street> street_queue;
+    std::queue<Street> init_street_queue;
+    Car(int time_in, std::queue<Street> st_q, bool v = false){
+        init_time = time_in;
+        street_queue = st_q;
+        init_street_queue = st_q;
+        current_street = st_q.front();
+        st_q.pop();
+        accum_time = 0;
+        verbose = v;
     }
 private:
+    
     Street current_street;
-    Street next_street;
-    TrafficController curr_intersection;
-    TrafficController next_intersection;
-    int curr_time; 
-    double accum_time = 0;
+    int init_time; 
+    double accum_time;
+    bool unknown_street = false;
+    bool reached_dest = false;
+    bool verbose;
 };

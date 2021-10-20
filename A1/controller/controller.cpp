@@ -21,6 +21,10 @@ std::string TrafficLight::getColor() {
     return color;
 }
 
+bool TrafficLight::canGo() {
+    return (color.compare("r"));
+}
+
 std::string TrafficLight::getStreet(){
     return street;
 }
@@ -61,6 +65,7 @@ std::string TrafficController::getCoordinate(){
 
 
 void TrafficController::updateLights(){
+    
     int time_diff = curr_time - prev_time; 
     for(int i = 0;i<street_lights.size();i++){
         std::string curr_color = street_lights[i].getColor();
@@ -68,14 +73,14 @@ void TrafficController::updateLights(){
         if(!(curr_color.compare("y"))) street_lights[i].nextColor();
     }
     if(allRed()){
-            if(prev_green+1 == street_lights.size()){
-                street_lights[0].nextColor();
-                prev_green = 0;
-            }else{
-                prev_green++;
-                street_lights[prev_green].nextColor();
-            }
-            prev_time = curr_time;
+        if(prev_green+1 == street_lights.size()){
+            street_lights[0].nextColor();
+            prev_green = 0;
+        }else{
+            prev_green++;
+            street_lights[prev_green].nextColor();
+        }
+        prev_time = curr_time;
     }
 }
 
@@ -88,11 +93,16 @@ bool TrafficController::allRed(){
 }
 
 
+
+
+
 double Street::compute_time(const double distance, const uint32_t speed) {
     return std::ceil((distance * 3600) / speed);
 }
 
-
+bool Street::canSync(){
+    return can_sync;
+}
 void Street::increase_car_count() {
     car_count++;
 }
@@ -106,22 +116,85 @@ void Street::decrement_car_count() {
 bool Street::hasSpace() {
     return (capacity-car_count > 0);
 }
+
 double Street::getDriveTime() {
     return drive_time;
 }
-void Car::update_car(Street * next_st){
-    if(next_st->hasSpace()){
-        current_street->decrement_car_count();
-        accum_time += current_street->getDriveTime();
-        current_street = next_st;
 
+
+
+std::string Street::getStreetName(){
+    return street_name;
+}
+
+bool Street::isDestination(){
+    return isDest;
+}
+
+void Street::HeavyTraffic(){
+    capacity = 2;
+    drive_time = std::ceil((distance * 3600) / 3);
+}
+
+
+void Car::update_car(){
+
+    auto tc = current_street.tc_begin;
+    int idx;
+    if(unknown_street)
+        idx = 0;
+    else {
+        ////////////////////////////////////////////////////////////
+        //https://www.techiedelight.com/find-index-element-vector-cpp/
+        std::vector<std::string>::iterator itr = std::find((tc->street_names).begin(),(tc->street_names).end(),current_street.getStreetName());
+        
+        if(itr != (tc->street_names).cend()) {
+            idx = std::distance((tc->street_names).begin(),itr); 
+        //////////////////////////////////////////////////////////////
+        }
     }
+
+    bool check = tc->street_lights[idx].canGo();
+    if(check && (street_queue.front()).hasSpace()){
+        accum_time += current_street.getDriveTime(); 
+
+        current_street.decrement_car_count();
+
+        current_street = street_queue.front();
+        street_queue.pop();
+        reached_dest = current_street.isDestination();
+        current_street.increase_car_count();
+
+    }else
+        accum_time++;
+    
+    
 }
 
-int Car::getCurrTime(){
-    return curr_time;
+
+
+int Car::getInitTime(){
+    return init_time;
 }
 
+bool Car::reachedDest() const{
+    return reached_dest;
+}
+
+int Car::getTotalTime() const{
+    return accum_time;
+}
+
+void Car::HeavyTraffic(){
+    while(!init_street_queue.empty()){
+        Street temp = init_street_queue.front();
+        temp.HeavyTraffic();
+        street_queue.push(temp);
+        init_street_queue.pop();
+    }
+
+    init_street_queue = street_queue;
+}
 /////////////////////////////////////////////////////////
 // portion taken from: https://www.cplusplus.com/articles/1UqpX9L8/
 
@@ -191,14 +264,14 @@ int main(int argc, char* argv[]){
     ///////////////////////////////////////////////////////////////
 //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
 struct CompareTC{
-    bool operator()( TrafficController& lhs,  TrafficController& rhs){
-        return lhs.getCurrTime() < rhs.getCurrTime();
+    bool operator()( std::shared_ptr<TrafficController>& lhs,  std::shared_ptr<TrafficController>& rhs){
+        return lhs->getCurrTime() < rhs->getCurrTime();
     }
 };
 
 struct CompareCar{
     bool operator()( Car& lhs,  Car& rhs){
-        return lhs.getCurrTime() < rhs.getCurrTime();
+        return lhs.getInitTime() < rhs.getInitTime();
     }
 };
 ///////////////////////////////////////////////////////////////
@@ -220,10 +293,10 @@ struct CompareCar{
     std::string line;
     vector<string> row;
     std::vector<std::vector<string>> traffic_signals_arr;
-    unordered_map<std::string,TrafficController> tcMap;
+    unordered_map<std::string, std::shared_ptr<TrafficController>> tcMap;
     int intersection_count = 0;
     bool start = false;
-    std::vector<TrafficController> tcVec;
+    std::vector<std::shared_ptr<TrafficController>> tcVec;
     while(getline(in,line)){
         splitstring split_row(line);
         row = split_row.split(',',1);
@@ -232,9 +305,9 @@ struct CompareCar{
             intersection_count++;
             std::string TBC = row[12];
             if(!TBC.compare("GPS")){
-                TrafficController tc(-1,row[0],row[34],row[3],row[4],row[6],row[8]);
+                std::shared_ptr<TrafficController> tc(new TrafficController(-1,row[0],row[34],row[3],row[4],row[6],row[8]));
                 tcVec.push_back(tc);
-                std::pair<std::string,TrafficController> tc_pair (row[0],tc);
+                std::pair<std::string,std::shared_ptr<TrafficController>> tc_pair (row[0],tc);
                 tcMap.insert(tc_pair);
             }
         }else start = true; //skip the header
@@ -246,7 +319,6 @@ struct CompareCar{
     
     ifstream in2("Sync_And_Cars.csv");
     std::vector<std::vector<string>> cars_arr;
-    int idx;
     std::string line2;
     vector<std::string> row2;
     while(getline(in2,line2)){
@@ -254,7 +326,6 @@ struct CompareCar{
         row2 = split_row2.split(',',1);
         cars_arr.push_back(row2);
     }
-    // cout << cars_arr[3][12].size() << endl;
     
     in2.close();
 
@@ -272,7 +343,6 @@ struct CompareCar{
     double second1;
     double first2;
     double second2;
-    int end_of_line = cars_arr[0].size();
     bool ignore = false;
     std::pair<double,double> pair1, pair2;
     std::vector<std::string> st_names1;
@@ -280,18 +350,20 @@ struct CompareCar{
     std::string street_name;
     bool street_name_unknown = false;
     bool found_street = false;
-    std::vector<std::vector<*Street>> car_paths;
-    std::unordered_map<std::string, TrafficController>::iterator tc_find;
-    std::unordered_map<std::string, TrafficController>::iterator tc_find2;
+    int end_of_line = cars_arr[0].size();
+
+    
+    std::unordered_map<std::string, std::shared_ptr<TrafficController>>::iterator tc_find;
+    std::unordered_map<std::string, std::shared_ptr<TrafficController>>::iterator tc_find2;
     for(i = 2; i<cars_arr.size()-1;i++){
         for(j=0; j<end_of_line;j++){
             if(!cars_arr[i][j].empty() && cars_arr[i][j].compare("\n") && cars_arr[i][j].size() > 0){
-                
-                first_CNN = std::stoi(cars_arr[i][j]);
+                if(j==14) first_CNN = std::stoi(cars_arr[i][j].substr(0,8));
+                else first_CNN = std::stoi(cars_arr[i][j]);
                 
                 if(!cars_arr[i+1][j].empty() && cars_arr[i+1][j].compare("\n") && cars_arr[i+1][j].size() > 0){
-                
-                    second_CNN = std::stoi(cars_arr[i+1][j]);
+                    if(j==14) second_CNN = std::stoi(cars_arr[i+1][j].substr(0,1));
+                    else second_CNN = std::stoi(cars_arr[i+1][j]);
                 
                     name = first_CNN;
                     name = name << 32;
@@ -300,21 +372,21 @@ struct CompareCar{
                     if(second_CNN == 0) {
                         street_name = "DESTINATION";
                         distance = 0;
-                        // if(j == 14) end_of_line--;
+                        if(j == 14) end_of_line--;
                     }
                     else{
                         if(cars_arr[i+1][j].size() > 1){
                             st_name = std::to_string(name);
                             tc_find = tcMap.find(cars_arr[i][j]);
                             if(tc_find != tcMap.end()){
-                                coord_as_string1 = (tc_find->second).getCoordinate();
-                                st_names1 = (tc_find->second).street_names;
+                                coord_as_string1 = (tc_find->second)->getCoordinate();
+                                st_names1 = (tc_find->second)->street_names;
                             }else ignore = true;
 
                             tc_find2 = tcMap.find(cars_arr[i+1][j]);
                             if(tc_find2 != tcMap.end()){
-                                coord_as_string2 = (tc_find2->second).getCoordinate();
-                                st_names2 = (tc_find->second).street_names;
+                                coord_as_string2 = (tc_find2->second)->getCoordinate();
+                                st_names2 = (tc_find->second)->street_names;
                             }else ignore = true;
 
                             if(!ignore){
@@ -334,13 +406,13 @@ struct CompareCar{
                                 std::pair<double,double> pair2 (first2,second2);
                                 
                                 distance = compute_distance(pair1,pair2);
-                                cout << compute_distance(pair1,pair2) << endl;
 
 
                                 for(auto i : st_names1){
                                     if(std::find(st_names2.begin(),st_names2.end(),i) != st_names2.end()){
                                         street_name = i + " FROM " + std::to_string(first_CNN) + "to " + std::to_string(second_CNN);
                                         found_street = true;
+                                        break;
                                     }
                                 }
                                 if(!found_street){
@@ -353,28 +425,68 @@ struct CompareCar{
                     if(!ignore){
                         auto it = streets.find(name);
                         if(it == streets.end()){
-                            Street st(street_name,true,street_name_unknown, &(tc_find->second), &(tc_find->second), distance);
+                            bool sync = false;
+                            if(i==0 || i==1) sync = true;
+                            Street st(street_name,true,street_name_unknown, tc_find->second, tc_find2->second, sync, distance);
                             std::pair<uint64_t,Street> street_pair (name,st);
                             streets.insert(street_pair);
-                            car_paths[j].push_back(&st);
                         }
                     } else ignore = false;
                 }
             } 
         }
     }
+
+
+    std::unordered_map<u_int64_t, Street>::iterator street_find;
     std::vector<Car> carVec;
-    for(auto i: car_paths){
-        for(int j = -1; j<=t; j++){
-            Car c(&i,j);
+    std::vector<Car> initCarVec;
+    
+    int k;
+    for(int i = 0; i<t; i++){
+        for(int j = 0; j<14; j++){
+            k = 2;
+            std::queue<Street> st_q;
+            while(cars_arr[k][j].compare("0")){
+            
+                first_CNN = std::stoi(cars_arr[k][j]);
+                second_CNN = std::stoi(cars_arr[k+1][j]);
+                
+                name = first_CNN;
+                name = name << 32;
+                name = name | second_CNN;
+
+                street_find = streets.find(name);
+                st_q.push(street_find->second);
+
+                k++;
+            }
+            Car c(i,st_q,(i==0 && j==0));
             carVec.push_back(c);
+            initCarVec.push_back(c);
         }
-    }       
+
+        first_CNN = std::stoi(cars_arr[2][14].substr(0,8));
+        second_CNN = std::stoi(cars_arr[3][14].substr(0,1));
+        name = first_CNN;
+        name = name << 32;
+        name = name | second_CNN;
+        std::queue<Street> st_q;
+        street_find = streets.find(name);
+        st_q.push(street_find->second);
+
+        Car c(i,st_q);
+
+        carVec.push_back(c);
+        initCarVec.push_back(c);
+    }
+
+
 
 
     /////////////////////////////////////////////////////////////////
     //https://neutrofoton.github.io/blog/2016/12/29/c-plus-plus-priority-queue-with-comparator/
-    priority_queue<TrafficController,vector<TrafficController>, CompareTC> pq;
+    priority_queue<TrafficController,vector<std::shared_ptr<TrafficController>>, CompareTC> pq;
     for(auto i = tcVec.cbegin(); i!=tcVec.cend();i++){
         pq.push(*i);
     }
@@ -384,22 +496,56 @@ struct CompareCar{
         pq_car.push(*i);
     }
     ////////////////////////////////////////////////////////////////////
-    tcVec.clear();
-    for(int i = 0; i<=t; i+=10){
-        tcVec.clear();
-        while(!pq.empty()){
-            auto temp = pq.top();
-            temp.setCurrTime(i);
-            temp.updateLights();
-            tcVec.push_back(temp);
-            pq.pop();
+        
+        for(int m = 0; m < 2; m++){
+            if(m){
+                carVec.clear();
+                for(auto i : initCarVec){
+                    i.HeavyTraffic();
+                }
+                for(auto i = initCarVec.cbegin(); i!=initCarVec.cend();i++){
+                    pq_car.push(*i);
+                }
+            }
+            
+            double total_drive_time = 0;
+            int num_dest = 0;
+            int curr_time = -1;
+            while(num_dest<t*15){
+                tcVec.clear();
+                carVec.clear();
+                while(!pq.empty()){
+                    auto temp = pq.top();
+                    temp->setCurrTime(curr_time);
+                    temp->updateLights();
+                    tcVec.push_back(temp);
+                    pq.pop();
+                }
+                for(auto i = tcVec.cbegin(); i!=tcVec.cend(); i++){
+                    pq.push(*i);
+                }
+                while(!pq_car.empty()){
+                    auto temp = pq_car.top();
+                    if(temp.getInitTime() <= curr_time){
+                        temp.update_car();
+                    }
+                    carVec.push_back(temp);
+                    pq_car.pop();
+                }
+                
+                for(auto i = carVec.cbegin(); i!=carVec.cend();i++){
+                    if(i->reachedDest()){
+                        total_drive_time += i->getTotalTime();
+                        num_dest++;
+                    }
+                    else pq_car.push(*i);
+                }
+                curr_time++;
+            }
+            if(!m) cout << "Light Traffic" << endl;
+            else cout << "Heavy Traffic" << endl;
+            cout << total_drive_time << endl;
         }
-        for(auto i = tcVec.cbegin(); i!=tcVec.cend();i++){
-            pq.push(*i);
-        }
-    }
-
-    
     ofstream kml_file("myfile.kml");
 
     kml_file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
@@ -429,11 +575,11 @@ struct CompareCar{
     output_file << "CNN,STREET,COLOR" << endl;
     for(int i = 0; i<pq.size();i++){
         auto temp = pq.top();
-        string CNN = temp.getCNN();
-        for(int j = 0; j<temp.street_lights.size();j++){
-            output_file << CNN +","+ temp.street_lights[j].getStreet() +"," +csvColor(temp.street_lights[j].getColor()) <<endl;
+        string CNN = temp->getCNN();
+        for(int j = 0; j<temp->street_lights.size();j++){
+            output_file << CNN +","+ temp->street_lights[j].getStreet() +"," +csvColor(temp->street_lights[j].getColor()) <<endl;
         }
-        printIntersectionKML(kml_file,temp);
+        printIntersectionKML(kml_file,*temp);
         pq.pop();
     }
     kml_file<<"</Document>"<<endl;
