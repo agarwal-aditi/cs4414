@@ -12,6 +12,8 @@
 #include "TrafficIntersection.hpp"
 
 extern int verbose;
+extern int stoi_count;
+extern int stod_count;
 extern csv TL, SC;
 
 int Car::active_cars = 0;
@@ -33,15 +35,16 @@ const double one_degree_long_miles = 54.74;
 const double one_degree_lat_miles = 69.97;
 
 int Car::driving_time(const int cnn1, const int cnn2) {
-    size_t idx1, idx2;
-    std::string long1 = TrafficIntersection::getIntersection(cnn1)->pos;
-    std::string long2 = TrafficIntersection::getIntersection(cnn2)->pos;
-    long1 = long1.substr(long1.find('-') + 1);
-    long2 = long2.substr(long2.find('-') + 1);
-    double cnn1_long = -stod(long1, &idx1), cnn2_long = -stod(long2, &idx2);
-    double cnn1_lat = stod(long1.substr(idx1)), cnn2_lat = stod(long2.substr(idx2));
-    std::pair<double, double> point1(cnn1_long, cnn1_lat);
-    std::pair<double, double> point2(cnn2_long, cnn2_lat);
+    // size_t idx1, idx2;
+    // std::string long1 = TrafficIntersection::getIntersection(cnn1)->pos;
+    // std::string long2 = TrafficIntersection::getIntersection(cnn2)->pos;
+    // long1 = long1.substr(long1.find('-') + 1);
+    // long2 = long2.substr(long2.find('-') + 1);
+    // double cnn1_long = -stod(long1, &idx1), cnn2_long = -stod(long2, &idx2);
+    // double cnn1_lat = stod(long1.substr(idx1)), cnn2_lat = stod(long2.substr(idx2));
+    // stod_count += 4;
+    std::pair<double, double> point1(TrafficIntersection::getIntersection(cnn1)->longitude, TrafficIntersection::getIntersection(cnn1)->lat);
+    std::pair<double, double> point2(TrafficIntersection::getIntersection(cnn2)->longitude, TrafficIntersection::getIntersection(cnn2)->lat);
     double dist = compute_distance(point1, point2);
     double time = compute_time(dist, traffic == LIGHT ? 30.0 : (traffic == MEDIUM ? 10 : 3.0));
     if(verbose & V_CARS)
@@ -66,6 +69,7 @@ void Car::reset() {
 
 void Car::event(const std::shared_ptr<AlertEvent>& myHandle, const int now) {
     int currentCNN = stoi(SC[current_row][car_n]);
+    stoi_count++;
     auto ti = TrafficIntersection::getIntersection(currentCNN);
     if(isStuck) {
         isStuck = false;
@@ -101,6 +105,7 @@ void Car::event(const std::shared_ptr<AlertEvent>& myHandle, const int now) {
         fnd = true;
     }
     int nextCNN = stoi(SC[current_row + 1][car_n]);
+    stoi_count++;
     if(nextCNN == 0) {
         if(verbose & V_CARS)
             std::cout << "... destination has been reached! " << std::endl;

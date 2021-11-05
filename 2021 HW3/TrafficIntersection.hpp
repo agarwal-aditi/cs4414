@@ -21,6 +21,9 @@ class TrafficIntersection : public AlertEvent {
 public:
     bool isInitialized;
     std::string pos;
+    double longitude;
+    double lat;
+    void pos_to_double();
     std::shared_ptr<std::vector<std::shared_ptr<TrafficLight>>> myLights;
     TrafficIntersection(const csvRow&, std::shared_ptr<std::vector<std::shared_ptr<TrafficLight>>>&);
     virtual void event(const std::shared_ptr<AlertEvent>&, const int);

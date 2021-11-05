@@ -22,10 +22,16 @@
 
 csv TL, SC;
 int verbose = 0;
+int stoi_count = 0;
+int stod_count = 0;
+extern int LENGTH;
+std::vector<int> CNN();
 extern std::queue<std::pair<int, AlertEvent*>> myPriorityQueue;
 extern std::map<int64_t, std::shared_ptr<Street>> streets;
 extern std::vector<std::shared_ptr<AlertEvent>> cars;
+extern std::vector<std::vector<std::shared_ptr<AlertEvent>>> theVector;
 const int SYNC_COLS = 2;
+int time_track = 0;
 
 csv read_csv(const std::string& filename) {
     std::string line;
@@ -96,6 +102,10 @@ int main(const int argc, const char** argv) {
         switch(argv[arg][1]) {
             case 't': {
                 run_length = atoi(argv[arg] + 3);
+                if(run_length > LENGTH-10000){
+                    std::cerr << "Time must be less than 10000" << std::endl;
+                    return EXIT_FAILURE;
+                }
                 break;
             }
             case 'v': {
@@ -163,12 +173,15 @@ int main(const int argc, const char** argv) {
             if(ts[streetColumnIndexes[i]].size() != 0)
                 lights->push_back(std::make_shared<TrafficLight>(stoi(ts[0]), ts[streetColumnIndexes[i]]));
         auto ti = new TrafficIntersection(ts, lights);
+        ti->pos_to_double();
         intersections.emplace(stoi(ts[0]), std::shared_ptr<AlertEvent>(static_cast<AlertEvent*>(ti)));
+        stoi_count++;
     }
 
     int64_t total_runtime[HEAVY + 1][SYNC + 1];
     for(int traffic = LIGHT; traffic <= HEAVY; traffic++) {
         for(int sync = UNSYNC; sync <= SYNC; sync++) {
+            AlertEvent::resetQueue();
             if(verbose != 0)
                 std::cout << "Traffic=" << traffic << ", Sync=" << (sync == SYNC) << std::endl;
             for(uint c = 0; c < SC[0].size(); c++)
@@ -177,6 +190,7 @@ int main(const int argc, const char** argv) {
                     if(verbose & V_STREETS)
                         std::cout << "[row=" << n << ", col=" << c << "] ";
                     int from = stoi(SC[n][c]), to = stoi(SC[n + 1][c]);
+                    stoi_count+=2;
                     long key = ((long)from << 32) | (long)to;
                     std::string name = getStreet(TL, streetColumnIndexes, SC[n][c], SC[n + 1][c]);
                     bool done = SC[n + 1][c] == "0";
@@ -216,6 +230,7 @@ int main(const int argc, const char** argv) {
                 for(int c = 0; c <= 1; c++)
 		  for(uint n = SKIPROWS; n < SC.size() - 1 && SC[n][c] == "0"; n++) {
                         auto itae = intersections[stoi(SC[n][c])];
+                        stoi_count++;
                         auto it = static_cast<TrafficIntersection*>(itae.get());
                         int beGreenAt = ((n - 2) * 15) % ((SYNCSTAYSGREEN + YELLOWDURATION) + (it->myLights->size() - 1) * 40);
                         std::string streetName;
@@ -270,7 +285,7 @@ int main(const int argc, const char** argv) {
                 std::cout << "Run time was " << Car::total_driving_time << std::endl;
             total_runtime[traffic][sync] = Car::total_driving_time;
             Car::reset();
-            AlertEvent::resetQueue();
+            
         }
     }
     // Print output
@@ -278,5 +293,7 @@ int main(const int argc, const char** argv) {
     std::cout << "Light traffic		" << std::setw(9) << total_runtime[LIGHT][UNSYNC] << "				" << std::setw(9) << total_runtime[LIGHT][SYNC] << std::endl;
     std::cout << "Medium traffic		" << std::setw(9) << total_runtime[MEDIUM][UNSYNC] << "				" << std::setw(9) << total_runtime[MEDIUM][SYNC] << std::endl;
     std::cout << "Heavy traffic		" << std::setw(9) << total_runtime[HEAVY][UNSYNC] << "				" << std::setw(9) << total_runtime[HEAVY][SYNC] << std::endl;
+    std::cout << "stod count " << stod_count << std::endl;
+    std::cout << "stoi count " << stoi_count << std::endl;
     return EXIT_SUCCESS;
 }

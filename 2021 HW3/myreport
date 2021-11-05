@@ -1,0 +1,289 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 30.51      4.49     4.49 81460305     0.06     0.06  void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE>)
+ 27.66      8.56     4.07 70303736     0.06     0.06  TrafficIntersection::getIntersection(int)
+ 14.61     10.71     2.15 69858536     0.03     0.10  Car::event(std::shared_ptr<AlertEvent> const&, int)
+  8.22     11.92     1.21 11593003     0.10     0.12  TrafficIntersection::event(std::shared_ptr<AlertEvent> const&, int)
+  7.92     13.09     1.17 81451539     0.01     0.18  AlertEvent::runOne()
+  6.97     14.11     1.03 162920616     0.01     0.01  void std::__push_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE>&)
+  2.96     14.55     0.44 81451311     0.01     0.01  AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int)
+  0.54     14.63     0.08                             AlertEvent::runAll()
+  0.14     14.65     0.02 17387682     0.00     0.00  TrafficLight::setColor(TrafficLight::Color const&)
+  0.14     14.67     0.02                             getStreet(std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >, std::vector<int, std::allocator<int> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  0.07     14.68     0.01   222600     0.04     0.16  Car::driving_time(int, int)
+  0.07     14.69     0.01     9000     1.11     1.11  Car::destReached(int)
+  0.07     14.70     0.01                             TrafficLight::cname[abi:cxx11](TrafficLight::Color const&)
+  0.07     14.71     0.01                             TrafficIntersection::setTimer(std::shared_ptr<AlertEvent> const&, int, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool)
+  0.07     14.72     0.01                             Car::reset()
+  0.03     14.72     0.01       13   384.74   384.74  void std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > >::_M_realloc_insert<std::shared_ptr<AlertEvent> const&>(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, std::shared_ptr<AlertEvent> const&)
+  0.00     14.72     0.00     1462     0.00     0.00  std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_destroy()
+  0.00     14.72     0.00     1462     0.00     0.00  std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_dispose()
+  0.00     14.72     0.00     1194     0.00     0.00  std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_destroy()
+  0.00     14.72     0.00     1194     0.00     0.00  std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_dispose()
+  0.00     14.72     0.00       19     0.00     0.00  void std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >::_M_realloc_insert<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&>(__gnu_cxx::__normal_iterator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*, std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > >, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&)
+  0.00     14.72     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z2TLB5cxx11
+  0.00     14.72     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN12TrafficLightC2EiRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+  0.00     14.72     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN3Car11active_carsE
+  0.00     14.72     0.00        1     0.00     0.00  _GLOBAL__sub_I_intersections
+  0.00     14.72     0.00        1     0.00     0.00  _GLOBAL__sub_I_myPriorityQueue
+  0.00     14.72     0.00        1     0.00     0.00  _GLOBAL__sub_I_streets
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.07% of 14.72 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     99.7    0.08   14.59                 AlertEvent::runAll() [1]
+                1.17   13.43 81451539/81451539     AlertEvent::runOne() [2]
+-----------------------------------------------
+                1.17   13.43 81451539/81451539     AlertEvent::runAll() [1]
+[2]     99.1    1.17   13.43 81451539         AlertEvent::runOne() [2]
+                2.15    4.91 69858536/69858536     Car::event(std::shared_ptr<AlertEvent> const&, int) [3]
+                4.49    0.51 81451539/81460305     void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE>) [4]
+                1.21    0.16 11593003/11593003     TrafficIntersection::event(std::shared_ptr<AlertEvent> const&, int) [6]
+-----------------------------------------------
+                2.15    4.91 69858536/69858536     AlertEvent::runOne() [2]
+[3]     47.9    2.15    4.91 69858536         Car::event(std::shared_ptr<AlertEvent> const&, int) [3]
+                4.05    0.00 69858536/70303736     TrafficIntersection::getIntersection(int) [5]
+                0.37    0.44 69849536/81451311     AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [8]
+                0.01    0.03  222600/222600      Car::driving_time(int, int) [9]
+                0.01    0.00    9000/9000        Car::destReached(int) [13]
+-----------------------------------------------
+                0.00    0.00    8766/81460305     AlertEvent::resetQueue() [17]
+                4.49    0.51 81451539/81460305     AlertEvent::runOne() [2]
+[4]     34.0    4.49    0.51 81460305         void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE>) [4]
+                0.51    0.00 81460305/162920616     void std::__push_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE>&) [7]
+-----------------------------------------------
+                0.03    0.00  445200/70303736     Car::driving_time(int, int) [9]
+                4.05    0.00 69858536/70303736     Car::event(std::shared_ptr<AlertEvent> const&, int) [3]
+[5]     27.6    4.07    0.00 70303736         TrafficIntersection::getIntersection(int) [5]
+-----------------------------------------------
+                1.21    0.16 11593003/11593003     AlertEvent::runOne() [2]
+[6]      9.3    1.21    0.16 11593003         TrafficIntersection::event(std::shared_ptr<AlertEvent> const&, int) [6]
+                0.06    0.07 11593003/81451311     AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [8]
+                0.02    0.00 17387682/17387682     TrafficLight::setColor(TrafficLight::Color const&) [10]
+-----------------------------------------------
+                0.51    0.00 81460305/162920616     void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE>) [4]
+                0.51    0.00 81460311/162920616     AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [8]
+[7]      7.0    1.03    0.00 162920616         void std::__push_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE>&) [7]
+-----------------------------------------------
+                0.00    0.00    8772/81451311     TrafficIntersection::setTimer(std::shared_ptr<AlertEvent> const&, int, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool) [12]
+                0.06    0.07 11593003/81451311     TrafficIntersection::event(std::shared_ptr<AlertEvent> const&, int) [6]
+                0.37    0.44 69849536/81451311     Car::event(std::shared_ptr<AlertEvent> const&, int) [3]
+[8]      6.5    0.44    0.52 81451311         AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [8]
+                0.51    0.00 81460311/162920616     void std::__push_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE>&) [7]
+                0.01    0.00      13/13          void std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > >::_M_realloc_insert<std::shared_ptr<AlertEvent> const&>(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, std::shared_ptr<AlertEvent> const&) [16]
+-----------------------------------------------
+                0.01    0.03  222600/222600      Car::event(std::shared_ptr<AlertEvent> const&, int) [3]
+[9]      0.2    0.01    0.03  222600         Car::driving_time(int, int) [9]
+                0.03    0.00  445200/70303736     TrafficIntersection::getIntersection(int) [5]
+-----------------------------------------------
+                0.02    0.00 17387682/17387682     TrafficIntersection::event(std::shared_ptr<AlertEvent> const&, int) [6]
+[10]     0.1    0.02    0.00 17387682         TrafficLight::setColor(TrafficLight::Color const&) [10]
+-----------------------------------------------
+                                                 <spontaneous>
+[11]     0.1    0.02    0.00                 getStreet(std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >, std::vector<int, std::allocator<int> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [11]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     0.1    0.01    0.00                 TrafficIntersection::setTimer(std::shared_ptr<AlertEvent> const&, int, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool) [12]
+                0.00    0.00    8772/81451311     AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [8]
+-----------------------------------------------
+                0.01    0.00    9000/9000        Car::event(std::shared_ptr<AlertEvent> const&, int) [3]
+[13]     0.1    0.01    0.00    9000         Car::destReached(int) [13]
+-----------------------------------------------
+                                                 <spontaneous>
+[14]     0.1    0.01    0.00                 TrafficLight::cname[abi:cxx11](TrafficLight::Color const&) [14]
+-----------------------------------------------
+                                                 <spontaneous>
+[15]     0.1    0.01    0.00                 Car::reset() [15]
+-----------------------------------------------
+                0.01    0.00      13/13          AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [8]
+[16]     0.0    0.01    0.00      13         void std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > >::_M_realloc_insert<std::shared_ptr<AlertEvent> const&>(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, std::shared_ptr<AlertEvent> const&) [16]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     0.0    0.00    0.00                 AlertEvent::resetQueue() [17]
+                0.00    0.00    8766/81460305     void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE>) [4]
+-----------------------------------------------
+                0.00    0.00    1462/1462        std::_Rb_tree<int, std::pair<int const, std::shared_ptr<AlertEvent> >, std::_Select1st<std::pair<int const, std::shared_ptr<AlertEvent> > >, std::less<int>, std::allocator<std::pair<int const, std::shared_ptr<AlertEvent> > > >::_M_erase(std::_Rb_tree_node<std::pair<int const, std::shared_ptr<AlertEvent> > >*) [75]
+[25]     0.0    0.00    0.00    1462         std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_destroy() [25]
+-----------------------------------------------
+                0.00    0.00    1462/1462        std::_Rb_tree<int, std::pair<int const, std::shared_ptr<AlertEvent> >, std::_Select1st<std::pair<int const, std::shared_ptr<AlertEvent> > >, std::less<int>, std::allocator<std::pair<int const, std::shared_ptr<AlertEvent> > > >::_M_erase(std::_Rb_tree_node<std::pair<int const, std::shared_ptr<AlertEvent> > >*) [75]
+[26]     0.0    0.00    0.00    1462         std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_dispose() [26]
+-----------------------------------------------
+                0.00    0.00    1194/1194        std::_Rb_tree<long, std::pair<long const, std::shared_ptr<Street> >, std::_Select1st<std::pair<long const, std::shared_ptr<Street> > >, std::less<long>, std::allocator<std::pair<long const, std::shared_ptr<Street> > > >::_M_erase(std::_Rb_tree_node<std::pair<long const, std::shared_ptr<Street> > >*) [78]
+[27]     0.0    0.00    0.00    1194         std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_destroy() [27]
+-----------------------------------------------
+                0.00    0.00    1194/1194        std::_Rb_tree<long, std::pair<long const, std::shared_ptr<Street> >, std::_Select1st<std::pair<long const, std::shared_ptr<Street> > >, std::less<long>, std::allocator<std::pair<long const, std::shared_ptr<Street> > > >::_M_erase(std::_Rb_tree_node<std::pair<long const, std::shared_ptr<Street> > >*) [78]
+[28]     0.0    0.00    0.00    1194         std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_dispose() [28]
+-----------------------------------------------
+                0.00    0.00      19/19          read_csv(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [38]
+[29]     0.0    0.00    0.00      19         void std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >::_M_realloc_insert<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&>(__gnu_cxx::__normal_iterator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*, std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > >, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) [29]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [82]
+[30]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z2TLB5cxx11 [30]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [82]
+[31]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN12TrafficLightC2EiRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE [31]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [82]
+[32]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN3Car11active_carsE [32]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [82]
+[33]     0.0    0.00    0.00       1         _GLOBAL__sub_I_intersections [33]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [82]
+[34]     0.0    0.00    0.00       1         _GLOBAL__sub_I_myPriorityQueue [34]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [82]
+[35]     0.0    0.00    0.00       1         _GLOBAL__sub_I_streets [35]
+-----------------------------------------------
+                                1462             std::_Rb_tree<int, std::pair<int const, std::shared_ptr<AlertEvent> >, std::_Select1st<std::pair<int const, std::shared_ptr<AlertEvent> > >, std::less<int>, std::allocator<std::pair<int const, std::shared_ptr<AlertEvent> > > >::_M_erase(std::_Rb_tree_node<std::pair<int const, std::shared_ptr<AlertEvent> > >*) [75]
+[75]     0.0    0.00    0.00       0+1462    std::_Rb_tree<int, std::pair<int const, std::shared_ptr<AlertEvent> >, std::_Select1st<std::pair<int const, std::shared_ptr<AlertEvent> > >, std::less<int>, std::allocator<std::pair<int const, std::shared_ptr<AlertEvent> > > >::_M_erase(std::_Rb_tree_node<std::pair<int const, std::shared_ptr<AlertEvent> > >*) [75]
+                0.00    0.00    1462/1462        std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_dispose() [26]
+                0.00    0.00    1462/1462        std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_destroy() [25]
+                                1462             std::_Rb_tree<int, std::pair<int const, std::shared_ptr<AlertEvent> >, std::_Select1st<std::pair<int const, std::shared_ptr<AlertEvent> > >, std::less<int>, std::allocator<std::pair<int const, std::shared_ptr<AlertEvent> > > >::_M_erase(std::_Rb_tree_node<std::pair<int const, std::shared_ptr<AlertEvent> > >*) [75]
+-----------------------------------------------
+                                1242             std::_Rb_tree<long, std::pair<long const, std::shared_ptr<Street> >, std::_Select1st<std::pair<long const, std::shared_ptr<Street> > >, std::less<long>, std::allocator<std::pair<long const, std::shared_ptr<Street> > > >::_M_erase(std::_Rb_tree_node<std::pair<long const, std::shared_ptr<Street> > >*) [78]
+[78]     0.0    0.00    0.00       0+1242    std::_Rb_tree<long, std::pair<long const, std::shared_ptr<Street> >, std::_Select1st<std::pair<long const, std::shared_ptr<Street> > >, std::less<long>, std::allocator<std::pair<long const, std::shared_ptr<Street> > > >::_M_erase(std::_Rb_tree_node<std::pair<long const, std::shared_ptr<Street> > >*) [78]
+                0.00    0.00    1194/1194        std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_dispose() [28]
+                0.00    0.00    1194/1194        std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_destroy() [27]
+                                1242             std::_Rb_tree<long, std::pair<long const, std::shared_ptr<Street> >, std::_Select1st<std::pair<long const, std::shared_ptr<Street> > >, std::less<long>, std::allocator<std::pair<long const, std::shared_ptr<Street> > > >::_M_erase(std::_Rb_tree_node<std::pair<long const, std::shared_ptr<Street> > >*) [78]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [30] _GLOBAL__sub_I__Z2TLB5cxx11 [2] AlertEvent::runOne() [15] Car::reset()
+  [31] _GLOBAL__sub_I__ZN12TrafficLightC2EiRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE [14] TrafficLight::cname[abi:cxx11](TrafficLight::Color const&) [25] std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_destroy()
+  [32] _GLOBAL__sub_I__ZN3Car11active_carsE [10] TrafficLight::setColor(TrafficLight::Color const&) [26] std::_Sp_counted_ptr<AlertEvent*, (__gnu_cxx::_Lock_policy)2>::_M_dispose()
+  [33] _GLOBAL__sub_I_intersections [5] TrafficIntersection::getIntersection(int) [27] std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_destroy()
+  [34] _GLOBAL__sub_I_myPriorityQueue [6] TrafficIntersection::event(std::shared_ptr<AlertEvent> const&, int) [28] std::_Sp_counted_ptr_inplace<Street, std::allocator<Street>, (__gnu_cxx::_Lock_policy)2>::_M_dispose()
+  [35] _GLOBAL__sub_I_streets [12] TrafficIntersection::setTimer(std::shared_ptr<AlertEvent> const&, int, int, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool) [29] void std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >::_M_realloc_insert<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&>(__gnu_cxx::__normal_iterator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*, std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > >, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&)
+  [11] getStreet(std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >, std::vector<int, std::allocator<int> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [13] Car::destReached(int) [16] void std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > >::_M_realloc_insert<std::shared_ptr<AlertEvent> const&>(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, std::shared_ptr<AlertEvent> const&)
+   [8] AlertEvent::scheduleMe(std::shared_ptr<AlertEvent> const&, int) [9] Car::driving_time(int, int) [7] void std::__push_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_val<compareAE>&)
+   [1] AlertEvent::runAll()    [3] Car::event(std::shared_ptr<AlertEvent> const&, int) [4] void std::__adjust_heap<__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE> >(__gnu_cxx::__normal_iterator<std::shared_ptr<AlertEvent>*, std::vector<std::shared_ptr<AlertEvent>, std::allocator<std::shared_ptr<AlertEvent> > > >, long, long, std::shared_ptr<AlertEvent>, __gnu_cxx::__ops::_Iter_comp_iter<compareAE>)

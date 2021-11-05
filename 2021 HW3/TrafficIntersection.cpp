@@ -9,6 +9,7 @@
 #include "constants.hpp"
 
 extern int verbose;
+extern int stod_count;
 std::map<int, std::shared_ptr<AlertEvent>> intersections;
 const int POS = 34;  // Column AI in TrafficSignals.csv
 
@@ -17,6 +18,16 @@ TrafficIntersection::TrafficIntersection(const csvRow& myRow, std::shared_ptr<st
 TrafficIntersection* TrafficIntersection::getIntersection(const int cnn) {
     return static_cast<TrafficIntersection*>(intersections[cnn].get());
 }
+
+void TrafficIntersection::pos_to_double(){
+    size_t idx1;
+    std::string long1 = pos;
+    long1 = long1.substr(long1.find('-') + 1);
+    longitude = -stod(long1, &idx1);
+    lat = stod(long1.substr(idx1));
+    stod_count += 2;
+}
+
 
 void TrafficIntersection::event(const std::shared_ptr<AlertEvent>& myHandle, const int now) {
     if(verbose & V_INTERSECTIONS)

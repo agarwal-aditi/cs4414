@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -O3 -Wall
+CFLAGS = -O3 -pg -Wall
 
 all: hw3
 
