@@ -169,12 +169,14 @@ int main(const int argc, const char** argv) {
       if(ts[0] == "CNN")
             continue;
         auto lights = std::make_shared<std::vector<std::shared_ptr<TrafficLight>>>();
+        auto val = stoi(ts[0]);
         for(int i = 0; i < 4 && streetColumnIndexes[i] != 0; i++)
             if(ts[streetColumnIndexes[i]].size() != 0)
-                lights->push_back(std::make_shared<TrafficLight>(stoi(ts[0]), ts[streetColumnIndexes[i]]));
+                lights->push_back(std::make_shared<TrafficLight>(val, ts[streetColumnIndexes[i]]));
+
         auto ti = new TrafficIntersection(ts, lights);
         ti->pos_to_double();
-        intersections.emplace(stoi(ts[0]), std::shared_ptr<AlertEvent>(static_cast<AlertEvent*>(ti)));
+        intersections.emplace(val, std::shared_ptr<AlertEvent>(static_cast<AlertEvent*>(ti)));
         stoi_count++;
     }
 
